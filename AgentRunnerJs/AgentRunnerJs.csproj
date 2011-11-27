@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{08EBD202-58DD-473E-AD00-2CCC24700BA7}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AgentRunnerJs</RootNamespace>
+    <AssemblyName>AgentRunnerJs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="index.html" />
+    <Content Include="js\Car.js" />
+    <Content Include="js\Detector.js" />
+    <Content Include="js\gui\gui.css" />
+    <Content Include="js\gui\gui.full.js" />
+    <Content Include="js\gui\gui.min.js" />
+    <Content Include="js\ImprovedNoise.js" />
+    <Content Include="js\postprocessing\BloomPass.js" />
+    <Content Include="js\postprocessing\DotScreenPass.js" />
+    <Content Include="js\postprocessing\EffectComposer.js" />
+    <Content Include="js\postprocessing\FilmPass.js" />
+    <Content Include="js\postprocessing\MaskPass.js" />
+    <Content Include="js\postprocessing\RenderPass.js" />
+    <Content Include="js\postprocessing\SavePass.js" />
+    <Content Include="js\postprocessing\ShaderPass.js" />
+    <Content Include="js\postprocessing\TexturePass.js" />
+    <Content Include="js\PRNG.js" />
+    <Content Include="js\RequestAnimationFrame.js" />
+    <Content Include="js\ShaderExtras.js" />
+    <Content Include="js\ShaderSkin.js" />
+    <Content Include="js\SimplexNoise.js" />
+    <Content Include="js\Sparks.js" />
+    <Content Include="js\Stats.js" />
+    <Content Include="js\Tween.js" />
+    <Content Include="Models\Agent\Man.js" />
+    <Content Include="Models\Agent\Man.bmp" />
+    <Content Include="Models\Bridge\Bridge.bmp" />
+    <Content Include="Models\Bridge\Bridge.js" />
+    <Content Include="Models\Bus\Bus.bmp" />
+    <Content Include="Models\Bus\Bus.js" />
+    <Content Include="Models\Car\Car.js" />
+    <Content Include="Models\Car\CarBody.jpg" />
+    <Content Include="Models\HGV\hgv.bmp" />
+    <Content Include="Models\HGV\hgv.js" />
+    <Content Include="Models\Lamp\Lamp.bmp" />
+    <Content Include="Models\Lamp\Lamp.js" />
+    <Content Include="Models\MotorBike\MotorBike.bmp" />
+    <Content Include="Models\MotorBike\MotorBike.js" />
+    <Content Include="Models\Road\Road.jpg" />
+    <Content Include="Models\Road\Road.js" />
+    <Content Include="Models\Taxi\Taxi.bmp" />
+    <Content Include="Models\Taxi\Taxi.js" />
+    <Content Include="Models\Tree\Tree.bmp" />
+    <Content Include="Models\Tree\Tree.js" />
+    <Content Include="Models\Tunnel\Tunnel.bmp" />
+    <Content Include="Models\Tunnel\Tunnel.js" />
+    <Content Include="Three.js" />
+    <Content Include="Web.config" />
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\Agent\Man.blend" />
+    <None Include="Models\Bridge\Bridge.blend" />
+    <None Include="Models\Bus\Bus.blend" />
+    <None Include="Models\Car\Car.blend" />
+    <None Include="Models\HGV\hgv.blend" />
+    <None Include="Models\Lamp\Lamp.blend" />
+    <None Include="Models\MotorBike\MotorBike.blend" />
+    <None Include="Models\Road\Road.blend" />
+    <None Include="Models\Taxi\Taxi.blend" />
+    <None Include="Models\Tree\Tree.blend" />
+    <None Include="Models\Tunnel\Tunnel.blend" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>52492</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:52492/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

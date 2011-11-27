@@ -1,0 +1,5 @@
+C:\Projects\AgentRunnerJs\AgentRunnerJs\bin\AgentRunnerJs.dll
+C:\Projects\AgentRunnerJs\AgentRunnerJs\bin\AgentRunnerJs.pdb
+C:\Projects\AgentRunnerJs\AgentRunnerJs\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\AgentRunnerJs\AgentRunnerJs\obj\Debug\AgentRunnerJs.dll
+C:\Projects\AgentRunnerJs\AgentRunnerJs\obj\Debug\AgentRunnerJs.pdb
