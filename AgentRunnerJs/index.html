@@ -1,0 +1,543 @@
+<html>
+<head>
+    <script type="text/javascript" src="Three.js"></script>
+    <script type="text/javascript" src="js/Detector.js"></script>
+    <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+    <script type="text/javascript" src="js/Stats.js"></script>
+    <script type="text/javascript">
+        var LEFT_KEY = 37;
+        var RIGHT_KEY = 39;
+        function controls() {
+
+            if (window.event.keyCode == 37) {
+                switch (taxiMesh.position.x) {
+                    case LEFT_LANE:
+                        break;
+                    case CENTRAL_LANE:
+                        taxiMesh.position.x = LEFT_LANE;
+                        break;
+                    case RIGHT_LANE:
+                        taxiMesh.position.x = CENTRAL_LANE;
+                        break;
+
+                }
+
+            }
+            else if (window.event.keyCode == 39) {
+                switch (taxiMesh.position.x) {
+                    case LEFT_LANE:
+                        taxiMesh.position.x = CENTRAL_LANE;
+                        break;
+                    case CENTRAL_LANE:
+                        taxiMesh.position.x = RIGHT_LANE;
+                        break;
+                    case RIGHT_LANE:
+                        break;
+
+                }
+            }
+
+        }
+    </script>
+</head>
+<body onkeydown="controls()">
+    <div id="scene">
+    </div>
+    <script type="text/javascript">
+
+        // globals
+        var LEFT_PAVEMENT = -1070;
+        var LEFT_LANE = -470;
+        var CENTRAL_LANE = 0;
+        var RIGHT_LANE = 400;
+        var RIGHT_PAVEMENT = 1000;
+
+        var scene;
+        var camera;
+        var renderer;
+
+        var taxiMesh;
+
+        var roadMesh;
+
+        var meshes = [];
+        var speed = 15.0;
+
+        var loader;
+
+
+
+
+
+        function setRenderer() {
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(1024, 768);
+
+            // enable shadows on the renderer
+            renderer.shadowMapEnabled = true;
+            renderer.shadowCameraFov = 50;
+
+            //  renderer.shadowMapHeight = 1024;
+            //renderer.shadowMapWidth = 768;
+
+            document.getElementById('scene').appendChild(renderer.domElement);
+        }
+
+        function setCamera() {
+
+            var fov = 45; // camera field-of-view in degrees
+            var width = renderer.domElement.width;
+            var height = renderer.domElement.height;
+            var aspect = width / height; // view aspect ratio
+            var near = 1; // near clip plane
+            var far = 10000; // far clip plane beofre they disseaper
+
+            camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+
+            camera.position.x = 0;
+            
+            // above
+           // camera.position.y = 250;
+
+           // camera.position.y = 0;
+
+            // or + for mirror
+            camera.position.z = 1000;
+        }
+
+        function setScene() {
+            scene = new THREE.Scene();
+        }
+
+        function addLights() {
+            var light = new THREE.SpotLight();
+            light.position.set(RIGHT_LANE + 200, 400, 710);
+
+            // enable shadows for a light
+            light.castShadow = true;
+            scene.add(light);
+
+            var ambientLight = new THREE.AmbientLight(0x606060);
+            scene.add(ambientLight);
+
+
+            // enable shadows for a light
+            //ambientLight.castShadow = true;
+          //  scene.add(ambientLight);
+
+            var directionalLight = new THREE.DirectionalLight(0xffffff);
+            directionalLight.position.set(10, 10, 10).normalize();
+            //scene.add(directionalLight);
+        }
+
+
+        function loadModels() {
+            loader = new THREE.JSONLoader();
+
+            loader.load({ model: 'Models/Road/Road.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+                    new THREE.MeshBasicMaterial({ map: new THREE.ImageUtils.loadTexture('Models/Road/Road.jpg') })];
+
+
+
+                for (var i = 0; i <2; i++) {
+
+                    var roadMesh = new THREE.Mesh(geometry, material);
+
+
+                    roadMesh.rotation.x = Math.PI / 2;
+
+                    // line up the road with the models
+                    // MIDDLE OF THE ROAD
+                    roadMesh.position.y = 1000;
+
+                    // make it deeper so the models are "floating"
+                    //roadMesh1.position.y = -55;
+
+                //    roadMesh.position.x = -(i * 250);
+
+                    roadMesh.position.z = -(i * 10000);
+
+
+
+                    roadMesh.receiveShadow = true;
+                    //mesh.frustumCulled = false;
+                    roadMesh.scale.x = roadMesh.scale.y = roadMesh.scale.z = 45;
+
+                    roadMesh.updateMatrix();
+
+                    meshes.push(roadMesh);
+
+                    scene.add(roadMesh);
+                }
+
+
+
+
+
+            }
+            });
+
+
+
+            loader.load({ model: 'Models/Car/Car.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Car/CarBody.jpg') })];
+
+
+                var carMesh = new THREE.Mesh(geometry, material);
+
+                carMesh.position.y = -65;
+                
+                carMesh.position.z = 100;
+
+                carMesh.rotation.x = Math.PI / 2;
+
+                carMesh.castShadow = true;
+                carMesh.receiveShadow = true;
+
+                carMesh.scale.x = carMesh.scale.y = carMesh.scale.z = 100;
+
+                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(carMesh));
+
+                meshes.push(carMesh);
+
+                scene.add(carMesh);
+
+
+            }
+            });
+
+            loader.load({ model: 'Models/Bus/Bus.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bus/Bus.bmp') })];
+
+
+                var busMesh = new THREE.Mesh(geometry, material);
+
+                busMesh.position.y = -5;
+
+                busMesh.position.x = RIGHT_LANE;
+
+
+                busMesh.position.z = -(Math.floor(Math.random() * 10001));
+
+                busMesh.rotation.y = 130.4;
+
+                busMesh.rotation.x = Math.PI / 2;
+
+                busMesh.castShadow = true;
+
+                busMesh.scale.x = busMesh.scale.y = busMesh.scale.z = 80;
+
+                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(busMesh));
+
+                meshes.push(busMesh);
+
+                scene.add(busMesh);
+
+
+            }
+            });
+
+
+
+            loader.load({ model: 'Models/Agent/Man.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Agent/Man.bmp') })];
+
+
+                var agentMesh = new THREE.Mesh(geometry, material);
+
+                agentMesh.position.y = -100;
+                
+                agentMesh.position.x = LEFT_LANE;
+
+                agentMesh.position.z = -(Math.floor(Math.random() * 10001));
+
+                agentMesh.castShadow = true;
+
+                agentMesh.scale.x = agentMesh.scale.y = agentMesh.scale.z = 7;
+
+                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(agentMesh));
+
+                meshes.push(agentMesh);
+
+                scene.add(agentMesh);
+
+            }
+            });
+
+            loader.load({ model: 'Models/Bridge/Bridge.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bridge/Bridge.bmp') })];
+
+
+                var bridgeMesh = new THREE.Mesh(geometry, material);
+
+                bridgeMesh.position.y = 200;
+
+                //  bridgeMesh.rotation.y = 130.4;
+                bridgeMesh.rotation.x = Math.PI / 2;
+
+                bridgeMesh.position.z = -(Math.floor(Math.random() * 10001));
+
+                bridgeMesh.castShadow = true;
+
+                bridgeMesh.scale.x = bridgeMesh.scale.y = bridgeMesh.scale.z = 300;
+
+                meshes.push(bridgeMesh);
+
+                scene.add(bridgeMesh);
+
+            }
+            });
+
+
+            loader.load({ model: 'Models/HGV/hgv.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/HGV/hgv.bmp') })];
+
+
+                var hgvMesh = new THREE.Mesh(geometry, material);
+
+                hgvMesh.position.x = LEFT_LANE;
+
+                hgvMesh.position.y = 50;
+
+                hgvMesh.position.z = -(Math.floor(Math.random() * 10001));
+
+                //  bridgeMesh.rotation.y = 130.4;
+                hgvMesh.rotation.x = Math.PI / 2;
+
+                hgvMesh.position.z = -2000;
+
+                hgvMesh.castShadow = true;
+
+                hgvMesh.scale.x = hgvMesh.scale.y = hgvMesh.scale.z = 80;
+
+                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(hgvMesh));
+
+                meshes.push(hgvMesh);
+
+                scene.add(hgvMesh);
+
+            }
+            });
+
+
+
+            loader.load({ model: 'Models/Motorbike/Motorbike.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Motorbike/Motorbike.bmp') })];
+
+
+                var motorBikeMesh = new THREE.Mesh(geometry, material);
+
+                motorBikeMesh.position.x = LEFT_LANE + 70;
+                
+                motorBikeMesh.position.y = -100;
+
+                motorBikeMesh.position.z = -(Math.floor(Math.random() * 10001));
+
+                motorBikeMesh.rotation.x = Math.PI / 2;
+                //   motorBikeMesh.rotation.z = Math.PI;
+
+
+                motorBikeMesh.castShadow = true;
+
+                motorBikeMesh.scale.x = motorBikeMesh.scale.y = motorBikeMesh.scale.z = 22.5;
+
+                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(motorBikeMesh));
+                
+                meshes.push(motorBikeMesh);
+
+                scene.add(motorBikeMesh);
+
+            }
+            });
+
+
+
+            loader.load({ model: 'Models/Lamp/Lamp.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Lamp/Lamp.bmp') })];
+
+
+                var lampMesh = new THREE.Mesh(geometry, material);
+
+                lampMesh.position.x = LEFT_PAVEMENT;
+
+                lampMesh.position.y = -100;
+
+                lampMesh.rotation.x = Math.PI / 2;
+                lampMesh.rotation.z = Math.PI;
+
+                lampMesh.position.z = -500;
+
+
+                lampMesh.castShadow = true;
+
+                lampMesh.scale.x = lampMesh.scale.y = lampMesh.scale.z = 30;
+
+                meshes.push(lampMesh);
+
+                scene.add(lampMesh);
+
+            }
+            });
+
+
+            loader.load({ model: 'Models/Tree/Tree.js', callback: function (geometry) {
+
+                var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Tree/Tree.bmp') })];
+
+
+                var treeMesh = new THREE.Mesh(geometry, material);
+
+                treeMesh.position.x = RIGHT_PAVEMENT +  100;
+                treeMesh.position.y = -100;
+
+                treeMesh.position.z = -1000;
+
+                treeMesh.rotation.x = Math.PI / 2;
+                treeMesh.rotation.z = Math.PI;
+
+
+                treeMesh.castShadow = true;
+
+                treeMesh.scale.x = treeMesh.scale.y = treeMesh.scale.z = 25;
+
+                meshes.push(treeMesh);
+
+                scene.add(treeMesh);
+
+            }
+            });
+
+
+
+        loader.load({ model: 'Models/Taxi/Taxi.js', callback: function (geometry) {
+
+            var material = [new THREE.MeshFaceMaterial(),
+	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Taxi/Taxi.bmp') })];
+
+
+            taxiMesh = new THREE.Mesh(geometry, material);
+
+            taxiMesh.position.x = RIGHT_LANE;
+            taxiMesh.position.y = -85;
+
+            // taxiMesh.position.z = -250;
+
+            taxiMesh.rotation.x = Math.PI / 2;
+
+            // taxiMesh.rotation.z = Math.PI;
+
+
+            taxiMesh.castShadow = true;
+
+            taxiMesh.scale.x = taxiMesh.scale.y = taxiMesh.scale.z = 15;
+
+            
+
+
+            scene.add(taxiMesh);
+
+        }
+        });
+
+        }
+
+        function startGame() {
+            camera.lookAt(scene.position);
+
+            renderer.render(scene, camera);
+        }
+
+
+        function animate(t) {
+            // spin the camera in a circle
+            //camera.position.x = Math.sin(t/1000)*300;
+            //camera.position.y = 150;
+            //camera.position.z = Math.cos(t/1000)*300;
+            //console.log(camera.position.x + ":" + camera.position.y + ":" + camera.position.z);
+            //camera.lookAt( scene.position );
+            if (meshes.length > 0) {
+                for (var i = 0; i < meshes.length; i++) {
+
+                    if (taxiMesh != null) {
+                        var ray = new THREE.Ray(taxiMesh.position, new THREE.Vector3(0, 0, -1));
+
+                        var c = THREE.Collisions.rayCastNearest(ray);
+
+                        if (c && c.distance == -1) {
+
+                            // game over!
+
+                            console.log("boom!");
+                         //   alert("You crashed!");
+                          //  return;
+                            
+                        } 
+                        else if (c){
+                          //  console.log("Ray is !" + c.distance);
+                        }
+                    }
+
+
+
+                    if (taxiMesh != null) {
+                        //if (taxiMesh.geometry.boundingSphere.intersects(meshes[i].geometry.boundingSphere))
+                      //      console.log("BOOM");
+                        if (meshes[i].position.z == taxiMesh.position.z) {
+                            //console.log(meshes[i]);
+                        }
+                    }
+
+                 //   console.log(meshes[i].id + " is at position " + meshes[i].position.z);
+
+                    if (meshes[i].position.z > 5500) {
+                      //  console.log("OFF SCREEN");
+                        meshes[i].position.z = -((10000 * 2) - (5500 + 100));
+                    }
+                   
+                   meshes[i].position.z += 100;
+
+                }
+
+            }
+
+
+            //litCubeMesh.position.y = 60-Math.sin(t/900)*25;
+            //litCubeMesh.position.z = Math.sin(t/600)*85;
+            //litCubeMesh.rotation.x = t/500;
+            // litCubeMesh.rotation.y = t/800;
+
+            // renderer automatically clears unless autoClear = false
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(animate, renderer.domElement);
+        };
+
+        setRenderer();
+        setCamera();
+        setScene();
+        addLights();
+        loadModels();
+
+
+        animate(new Date().getTime());
+	  
+    </script>
+</body>
+</html>
