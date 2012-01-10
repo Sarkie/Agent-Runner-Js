@@ -1,20 +1,17 @@
-/*
- * File generated with Blender 2.59 Exporter
- * https://github.com/mrdoob/three.js/tree/master/utils/exporters/blender/
- *
- * vertices: 72
- * faces: 62
- * normals: 72
- * uvs: 139
- * colors: 0
- * materials: 1
- * morphTargets: 0
- *
- */
+{
 
-var model = {
-
-    "version" : 2,
+    "metadata" :
+    {
+        "formatVersion" : 3,
+        "generatedBy"   : "Blender 2.60 Exporter",
+        "vertices"      : 72,
+        "faces"         : 62,
+        "normals"       : 72,
+        "colors"        : 0,
+        "uvs"           : 139,
+        "materials"     : 1,
+        "morphTargets"  : 0
+    },
 
     "scale" : 1.000000,
 
@@ -39,7 +36,4 @@ var model = {
 
 
 
-};
-
-postMessage( model );
-close();
+}
