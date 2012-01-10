@@ -97,6 +97,7 @@
     <Content Include="Models\Tree\Tree.js" />
     <Content Include="Models\Tunnel\Tunnel.bmp" />
     <Content Include="Models\Tunnel\Tunnel.js" />
+    <Content Include="Three.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
