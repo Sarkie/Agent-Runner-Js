@@ -2,7 +2,7 @@
 <head>
     <script type="text/javascript" src="Three.js"></script>
     <script type="text/javascript" src="js/Detector.js"></script>
-    <script type="text/javascript" src="js/RequestAnimationFrame.js"></script>
+  
     <script type="text/javascript" src="js/Stats.js"></script>
     <script type="text/javascript">
         var LEFT_KEY = 37;
@@ -61,7 +61,7 @@
         var roadMesh;
 
         var meshes = [];
-        var speed = 15.0;
+        var speed = 100.0;
 
         var loader;
 
@@ -84,6 +84,11 @@
             document.getElementById('scene').appendChild(renderer.domElement);
         }
 
+        function setScene() {
+            scene = new THREE.Scene();
+        }
+
+        
         function setCamera() {
 
             var fov = 45; // camera field-of-view in degrees
@@ -104,12 +109,11 @@
 
             // or + for mirror
             camera.position.z = 1000;
+
+            scene.add(camera);
         }
 
-        function setScene() {
-            scene = new THREE.Scene();
-        }
-
+       
         function addLights() {
             var light = new THREE.SpotLight();
             light.position.set(RIGHT_LANE + 200, 400, 710);
@@ -135,14 +139,13 @@
         function loadModels() {
             loader = new THREE.JSONLoader();
 
-            loader.load({ model: 'Models/Road/Road.js', callback: function (geometry) {
+            loader.load('Models/Road/Road.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-                    new THREE.MeshBasicMaterial({ map: new THREE.ImageUtils.loadTexture('Models/Road/Road.jpg') })];
-
+                var material = new THREE.MeshBasicMaterial({ map: new THREE.ImageUtils.loadTexture('Models/Road/Road.jpg') });
 
 
-                for (var i = 0; i <2; i++) {
+
+                for (var i = 0; i < 2; i++) {
 
                     var roadMesh = new THREE.Mesh(geometry, material);
 
@@ -156,7 +159,7 @@
                     // make it deeper so the models are "floating"
                     //roadMesh1.position.y = -55;
 
-                //    roadMesh.position.x = -(i * 250);
+                    //    roadMesh.position.x = -(i * 250);
 
                     roadMesh.position.z = -(i * 10000);
 
@@ -177,21 +180,19 @@
 
 
 
-            }
-            });
+            }, 'Models/Road/Road.jpg');
 
 
 
-            loader.load({ model: 'Models/Car/Car.js', callback: function (geometry) {
+            loader.load('Models/Car/Car.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Car/CarBody.jpg') })];
+                var material =new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Car/CarBody.jpg') });
 
 
                 var carMesh = new THREE.Mesh(geometry, material);
 
                 carMesh.position.y = -65;
-                
+
                 carMesh.position.z = 100;
 
                 carMesh.rotation.x = Math.PI / 2;
@@ -201,22 +202,20 @@
 
                 carMesh.scale.x = carMesh.scale.y = carMesh.scale.z = 100;
 
-                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(carMesh));
+               //scene.colliders.push(THREE.CollisionUtils.MeshOBB(carMesh));
 
                 meshes.push(carMesh);
 
                 scene.add(carMesh);
 
 
-            }
-            });
+            }, 'Models/Car/CarBody.jpg');
 
-            loader.load({ model: 'Models/Bus/Bus.js', callback: function (geometry) {
-
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bus/Bus.bmp') })];
+            loader.load('Models/Bus/Bus.js', function(geometry) {
 
 
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bus/Bus.bmp') });
+                
                 var busMesh = new THREE.Mesh(geometry, material);
 
                 busMesh.position.y = -5;
@@ -234,28 +233,25 @@
 
                 busMesh.scale.x = busMesh.scale.y = busMesh.scale.z = 80;
 
-                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(busMesh));
+              //scene.colliders.push(THREE.CollisionUtils.MeshOBB(busMesh));
 
                 meshes.push(busMesh);
 
                 scene.add(busMesh);
 
 
-            }
-            });
+            },'Models/Bus/Bus.bmp');
 
 
 
-            loader.load({ model: 'Models/Agent/Man.js', callback: function (geometry) {
+            loader.load('Models/Agent/Man.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Agent/Man.bmp') })];
-
-
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Agent/Man.bmp') });
+                
                 var agentMesh = new THREE.Mesh(geometry, material);
 
                 agentMesh.position.y = -100;
-                
+
                 agentMesh.position.x = LEFT_LANE;
 
                 agentMesh.position.z = -(Math.floor(Math.random() * 10001));
@@ -264,20 +260,17 @@
 
                 agentMesh.scale.x = agentMesh.scale.y = agentMesh.scale.z = 7;
 
-                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(agentMesh));
+               // scene.colliders.push(THREE.CollisionUtils.MeshColliderWBox(agentMesh));
 
                 meshes.push(agentMesh);
 
                 scene.add(agentMesh);
 
-            }
-            });
+            }, 'Models/Agent/Man.bmp');
 
-            loader.load({ model: 'Models/Bridge/Bridge.js', callback: function (geometry) {
+            loader.load('Models/Bridge/Bridge.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bridge/Bridge.bmp') })];
-
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Bridge/Bridge.bmp') });
 
                 var bridgeMesh = new THREE.Mesh(geometry, material);
 
@@ -296,14 +289,11 @@
 
                 scene.add(bridgeMesh);
 
-            }
-            });
+            }, 'Models/Bridge/Bridge.bmp');
 
+            loader.load('Models/HGV/hgv.js', function(geometry) {
 
-            loader.load({ model: 'Models/HGV/hgv.js', callback: function (geometry) {
-
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/HGV/hgv.bmp') })];
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/HGV/hgv.bmp') });
 
 
                 var hgvMesh = new THREE.Mesh(geometry, material);
@@ -323,27 +313,24 @@
 
                 hgvMesh.scale.x = hgvMesh.scale.y = hgvMesh.scale.z = 80;
 
-                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(hgvMesh));
+               //scene.colliders.push(THREE.CollisionUtils.MeshOBB(hgvMesh));
 
                 meshes.push(hgvMesh);
 
                 scene.add(hgvMesh);
 
-            }
-            });
+            }, 'Models/HGV/hgv.bmp');
 
 
 
-            loader.load({ model: 'Models/Motorbike/Motorbike.js', callback: function (geometry) {
+            loader.load('Models/Motorbike/Motorbike.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Motorbike/Motorbike.bmp') })];
-
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Motorbike/Motorbike.bmp') });
 
                 var motorBikeMesh = new THREE.Mesh(geometry, material);
 
                 motorBikeMesh.position.x = LEFT_LANE + 70;
-                
+
                 motorBikeMesh.position.y = -100;
 
                 motorBikeMesh.position.z = -(Math.floor(Math.random() * 10001));
@@ -356,22 +343,19 @@
 
                 motorBikeMesh.scale.x = motorBikeMesh.scale.y = motorBikeMesh.scale.z = 22.5;
 
-                THREE.Collisions.colliders.push(THREE.CollisionUtils.MeshOBB(motorBikeMesh));
-                
+               //scene.colliders.push(THREE.CollisionUtils.MeshOBB(motorBikeMesh));
+
                 meshes.push(motorBikeMesh);
 
                 scene.add(motorBikeMesh);
 
-            }
-            });
+            }, 'Models/Motorbike/Motorbike.bmp');
 
 
 
-            loader.load({ model: 'Models/Lamp/Lamp.js', callback: function (geometry) {
+            loader.load('Models/Lamp/Lamp.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Lamp/Lamp.bmp') })];
-
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Lamp/Lamp.bmp') });
 
                 var lampMesh = new THREE.Mesh(geometry, material);
 
@@ -393,19 +377,16 @@
 
                 scene.add(lampMesh);
 
-            }
-            });
+            }, 'Models/Lamp/Lamp.bmp');
 
 
-            loader.load({ model: 'Models/Tree/Tree.js', callback: function (geometry) {
+            loader.load('Models/Tree/Tree.js', function(geometry) {
 
-                var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Tree/Tree.bmp') })];
-
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Tree/Tree.bmp') });
 
                 var treeMesh = new THREE.Mesh(geometry, material);
 
-                treeMesh.position.x = RIGHT_PAVEMENT +  100;
+                treeMesh.position.x = RIGHT_PAVEMENT + 100;
                 treeMesh.position.y = -100;
 
                 treeMesh.position.z = -1000;
@@ -422,40 +403,37 @@
 
                 scene.add(treeMesh);
 
-            }
-            });
+            }, 'Models/Tree/Tree.bmp');
 
 
 
-        loader.load({ model: 'Models/Taxi/Taxi.js', callback: function (geometry) {
+            loader.load('Models/Taxi/Taxi.js', function(geometry) {
 
-            var material = [new THREE.MeshFaceMaterial(),
-	new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Taxi/Taxi.bmp') })];
-
-
-            taxiMesh = new THREE.Mesh(geometry, material);
-
-            taxiMesh.position.x = RIGHT_LANE;
-            taxiMesh.position.y = -85;
-
-            // taxiMesh.position.z = -250;
-
-            taxiMesh.rotation.x = Math.PI / 2;
-
-            // taxiMesh.rotation.z = Math.PI;
+                var material = new THREE.MeshLambertMaterial({ map: THREE.ImageUtils.loadTexture('Models/Taxi/Taxi.bmp') });
 
 
-            taxiMesh.castShadow = true;
+                taxiMesh = new THREE.Mesh(geometry, material);
 
-            taxiMesh.scale.x = taxiMesh.scale.y = taxiMesh.scale.z = 15;
+                taxiMesh.position.x = RIGHT_LANE;
+                taxiMesh.position.y = -85;
 
-            
+                // taxiMesh.position.z = -250;
+
+                taxiMesh.rotation.x = Math.PI / 2;
+
+                // taxiMesh.rotation.z = Math.PI;
 
 
-            scene.add(taxiMesh);
+                taxiMesh.castShadow = true;
 
-        }
-        });
+                taxiMesh.scale.x = taxiMesh.scale.y = taxiMesh.scale.z = 15;
+
+
+
+
+                scene.add(taxiMesh);
+
+            }, 'Models/Taxi/Taxi.bmp');
 
         }
 
@@ -467,6 +445,20 @@
 
 
         function animate(t) {
+            if (taxiMesh != null) {
+                var ray = new THREE.Ray(taxiMesh.position, new THREE.Vector3(0, 0, -1));
+
+                var intersects = ray.intersectObjects(meshes);
+
+                for (var j = 0; j < intersects.length; j++) {
+                    if (intersects[j].distance < speed) {
+                        // boom you it an object
+                        console.log(intersects[j]);
+                    }
+                    else {
+                        //console.log("Ray is " + intersects[j].distance);
+                    }
+                }
             // spin the camera in a circle
             //camera.position.x = Math.sin(t/1000)*300;
             //camera.position.y = 150;
@@ -476,24 +468,7 @@
             if (meshes.length > 0) {
                 for (var i = 0; i < meshes.length; i++) {
 
-                    if (taxiMesh != null) {
-                        var ray = new THREE.Ray(taxiMesh.position, new THREE.Vector3(0, 0, -1));
-
-                        var c = THREE.Collisions.rayCastNearest(ray);
-
-                        if (c && c.distance == -1) {
-
-                            // game over!
-
-                            console.log("boom!");
-                            alert("You crashed you silly billy!");
-                            return;
-                            
-                        } 
-                        else if (c){
-                          //  console.log("Ray is " + c.distance);
-                        }
-                    }
+                   
 
 
 
@@ -501,14 +476,16 @@
 
                     if (meshes[i].position.z > 5500) {
                       //  console.log("OFF SCREEN");
-                        meshes[i].position.z = -((10000 * 2) - (5500 + 100));
+                        meshes[i].position.z = -((10000 * 2) - (5500 + speed));
                     }
-                   
-                   meshes[i].position.z += 100;
+
+                    meshes[i].position.z += speed;
 
                 }
 
-            }
+           }
+
+           }
 
 
             //litCubeMesh.position.y = 60-Math.sin(t/900)*25;
@@ -522,8 +499,8 @@
         };
 
         setRenderer();
-        setCamera();
         setScene();
+        setCamera();
         addLights();
         loadModels();
 
